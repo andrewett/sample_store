@@ -1,0 +1,33 @@
+<h1 class="text-center">My Cart</h1>
+
+<div>
+  <% @line_items.each do |line_item| %>
+    <div class="media">
+      <div class="media-left">
+        <% if line_item.product.image.blank? == false %>
+          <%= image_tag line_item.product.image.url, size: 64 %>
+        <% end %>
+      </div>
+      <div class="media-body">
+        <h4 class="media-heading"><%= line_item.product.name %>: <small><%= number_to_currency line_item.product.price %></small></h4>
+        <p>Quantity: <%= line_item.quantity %> (<%= line_item.product.quantity %> in stock)
+          <%= form_tag(update_quant_path, method: :put) do %>
+            <%= number_field_tag :quantity, line_item.quantity, min: 1, max: line_item.product.quantity %>
+            <%= hidden_field_tag :id, line_item.id %>
+            <%= submit_tag 'Update', class: 'btn btn-default' %>
+          <% end %>
+        </p>
+        <p>Subtotal: <%= number_to_currency line_item.line_item_total %></p>
+      </div>
+      <div class="media-right">
+        <%= link_to 'Remove from Cart', delete_from_cart_path(id: line_item.id), class: "btn btn-danger" %>
+      </div>
+    </div>
+  <% end %>
+</div>
+
+<div class="text-center">
+  <%= link_to 'Proceed to Checkout?', checkout_path, class: "btn btn-success" %>
+</div>
+
+
